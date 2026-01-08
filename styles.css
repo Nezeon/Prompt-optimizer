@@ -1,9 +1,11 @@
 /* styles.css */
 .prompt-optimizer-btn {
     position: absolute;
-    top: 8px;
-    right: 8px;
-    z-index: 9999;
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    margin-bottom: 25px;
+    z-index: 2147483647;
     padding: 6px 12px;
     background-color: #7c4dff;
     color: white;

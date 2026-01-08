@@ -68,6 +68,12 @@ function processTextarea(textarea) {
         parent.style.position = 'relative';
     }
 
+    // Ensure button is visible if positioned outside (top: -px)
+    const style = window.getComputedStyle(parent);
+    if (style.overflow === 'hidden' || style.overflow === 'auto' || style.overflow === 'scroll') {
+        parent.style.overflow = 'visible';
+    }
+
     parent.appendChild(btn);
 
     // Event Listener
