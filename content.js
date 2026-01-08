@@ -11,17 +11,14 @@ function init() {
 }
 
 function handleMutations(mutations) {
-    // Simple throttle/debounce could be added here if performance suffers
     scanForTextareas();
 }
 
 function scanForTextareas() {
-    // Different selectors for different sites
     const hostname = window.location.hostname;
     let textareas = [];
 
     if (hostname.includes('claude.ai')) {
-        // Claude uses contenteditable divs often, or standard textareas
         textareas = document.querySelectorAll('div[contenteditable="true"], textarea');
     } else if (hostname.includes('aistudio.google.com')) {
         textareas = document.querySelectorAll('textarea');
@@ -35,25 +32,46 @@ function scanForTextareas() {
 }
 
 function processTextarea(textarea) {
-    if (textarea.dataset.promptOptimizerAttached) return;
+    // Check if button is already attached and ALIVE in the DOM
+    if (textarea._promptOptimizerButton && document.body.contains(textarea._promptOptimizerButton)) {
+        return;
+    }
 
-    // Attach marker
-    textarea.dataset.promptOptimizerAttached = "true";
+    let container = textarea.parentElement;
+    const hostname = window.location.hostname;
 
-    // Create wrapper/button
-    // Note: Inserting directly next to textarea might break site layout.
-    // Overlaying or appending to parent is safer.
-    const parent = textarea.parentElement;
-    if (!parent) return;
+    // Site-specific container finding logic to place button outside/above
+    if (hostname.includes('claude.ai')) {
+        const fieldset = textarea.closest('fieldset');
+        if (fieldset) container = fieldset;
+    } else if (hostname.includes('chatgpt.com') || hostname.includes('openai.com')) {
+        const form = textarea.closest('form');
+        const mainWrapper = textarea.closest('.group');
+        if (mainWrapper) container = mainWrapper;
+        else if (form) container = form;
+    } else if (hostname.includes('gemini.google.com')) {
+        const richTextarea = textarea.closest('rich-textarea');
+        if (richTextarea) container = richTextarea;
+    }
 
-    // Ensure parent is relative for absolute positioning of button
-    const originalPosition = window.getComputedStyle(parent).position;
+    if (!container) return;
+
+    // Ensure container is relative so absolute child indexes correctly
+    const originalPosition = window.getComputedStyle(container).position;
     if (originalPosition === 'static') {
-        // Only change if strictly necessary, but be careful of breaking layout
-        // parent.style.position = 'relative'; 
-        // Changing layout CSS is risky. Let's try to append a sibling container if possible,
-        // or just float it in the bottom right of the parent if it happens to work.
-        // For Claude/AI Studio, usually the input box is in a container.
+        container.style.position = 'relative';
+    }
+
+    // Ensure button is visible if positioned outside (top: -px)
+    // We iterate up a few parents to ensure no clipping
+    let el = container;
+    for (let i = 0; i < 3; i++) {
+        if (!el) break;
+        const style = window.getComputedStyle(el);
+        if (style.overflow === 'hidden' || style.overflow === 'auto' || style.overflow === 'scroll') {
+            el.style.overflow = 'visible';
+        }
+        el = el.parentElement;
     }
 
     const btn = document.createElement('button');
@@ -61,25 +79,16 @@ function processTextarea(textarea) {
     btn.innerHTML = `<span>Optimize</span><div class="optimizer-spinner"></div>`;
     btn.title = "Optimize with Gemma 3-12b (by Ayushmaan)";
 
-    // Inject button - Strategy: Append to parent, position absolute bottom-right
-    // We might need to adjust parent style to relative to contain it.
-    // Let's force relative on the immediate parent wrapper if it looks safe.
-    if (originalPosition === 'static') {
-        parent.style.position = 'relative';
-    }
+    container.appendChild(btn);
 
-    // Ensure button is visible if positioned outside (top: -px)
-    const style = window.getComputedStyle(parent);
-    if (style.overflow === 'hidden' || style.overflow === 'auto' || style.overflow === 'scroll') {
-        parent.style.overflow = 'visible';
-    }
-
-    parent.appendChild(btn);
+    // Save reference on the DOM element itself
+    textarea._promptOptimizerButton = btn;
+    textarea.dataset.promptOptimizerAttached = "true";
 
     // Event Listener
     btn.addEventListener('click', async (e) => {
         e.preventDefault();
-        e.stopPropagation(); // Prevent submitting the form
+        e.stopPropagation();
 
         if (btn.classList.contains('loading')) return;
 
@@ -133,7 +142,6 @@ function getText(element) {
 function setText(element, newText) {
     if (element.tagName === 'TEXTAREA') {
         element.value = newText;
-        // Trigger input event for frameworks (React/Angular/etc)
         element.dispatchEvent(new Event('input', { bubbles: true }));
         element.dispatchEvent(new Event('change', { bubbles: true }));
     } else if (element.isContentEditable) {
