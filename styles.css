@@ -1,0 +1,64 @@
+/* styles.css */
+.prompt-optimizer-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 9999;
+    padding: 6px 12px;
+    background-color: #7c4dff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s, transform 0.1s;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.prompt-optimizer-btn:hover {
+    background-color: #651fff;
+}
+
+.prompt-optimizer-btn:active {
+    transform: scale(0.98);
+}
+
+.prompt-optimizer-btn.loading {
+    opacity: 0.8;
+    cursor: wait;
+}
+
+/* Specific positioning tweaks per site might be needed via JS or specific CSS selectors */
+/* Claude specific tweak example */
+.prompt-optimizer-btn-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+/* Loading Spinner */
+.optimizer-spinner {
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    display: none;
+}
+
+.prompt-optimizer-btn.loading .optimizer-spinner {
+    display: block;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
