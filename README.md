@@ -1,39 +1,48 @@
-# Prompt Optimizer - Chrome Extension
+# Prompt Optimizer by Ayushmaan
 
-A Chrome Extension that integrates Google's Gemma 3-12b model directly into **Claude.ai** and **Google AI Studio** to optimize your prompts.
+![Prompt Optimizer Icon](icons/icon128.png)
+
+A Chrome Extension that integrates Google's Gemma 3-12b model directly into your favorite AI tools to optimize your prompts.
+
+**Created by [Ayushmaan](https://github.com/Nezeon)**
+
+## Supported Platforms
+- **Claude.ai**
+- **Google AI Studio**
+- **ChatGPT** (chatgpt.com & chat.openai.com)
+- **Google Gemini** (gemini.google.com)
 
 ## Features
-- **One-Click Optimization**: Adds an "Optimize" button to text areas.
-- **Gemma 3-12b Powered**: Uses Google's state-of-the-art open model.
-- **Secure**: API Key stored locally in your browser (`chrome.storage.sync`).
-- **Minimal UI**: Clean, unobtrusive design.
+- **One-Click Optimization**: Adds an "Optimize" button to chat inputs.
+- **Gemma 3-12b Powered**: Uses Google's state-of-the-art open model for prompt engineering.
+- **Secure**: Your API Key is stored locally in your browser (`chrome.storage.sync`).
+- **Minimal Branding**: Clean UI with a non-intrusive design.
 
 ## Installation
 
-1.  **Download/Clone** this repository.
+1.  **Clone or Download** this repository:
+    ```bash
+    git clone https://github.com/Nezeon/Prompt-optimizer.git
+    ```
 2.  Open Chrome and navigate to `chrome://extensions`.
 3.  Enable **Developer Mode** (toggle in the top right).
 4.  Click **Load unpacked**.
-5.  Select the `prompt-optimizer` folder (where `manifest.json` is located).
+5.  Select the `Prompt-optimizer` folder.
 
 ## Setup
 
 1.  Click the extension icon in your Chrome toolbar.
 2.  Enter your **Google AI Studio API Key**.
-    - Get one here: [https://aistudio.google.com/](https://aistudio.google.com/)
+    - Get one for free here: [https://aistudio.google.com/](https://aistudio.google.com/)
 3.  Click **Save Settings**.
 
 ## Usage
 
-1.  Go to [Claude.ai](https://claude.ai) or [Google AI Studio](https://aistudio.google.com).
-2.  Click on the prompt input box.
-3.  Type your rough prompt.
-4.  Click the violet **Optimize** button that appears.
-5.  Watch as your prompt is refined for clarity and structure!
+1.  Navigate to any supported site (e.g., [claude.ai](https://claude.ai)).
+2.  Type your rough prompt in the input box.
+3.  Click the violet **Optimize** button (top-right of the text area).
+4.  Watch as your prompt is refined for clarity and structure!
 
-## Files
-- `manifest.json`: Extension configuration.
-- `content.js`: Injects the button and handles page interaction.
-- `background.js`: Handles API calls to avoid CORS issues.
-- `optimize.js`: Core logic for Gemma API.
-- `popup.html/js`: Settings UI.
+## License
+
+This project is open source. Feel free to contribute!
